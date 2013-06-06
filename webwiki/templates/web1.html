@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:svg="http://www.w3.org/2000/svg">
+    <head>
+    </head>
+    <body>
+        <p>
+        Demo!!
+        </p>
+        <p>
+            <a href="/refresh">
+                <input type="button" value="Refresh" />
+            </a>
+        </p>
+        <div id="web">
+            <svg:svg id="svgweb" width="1000" height="750">
+                {% for page_url, len in root.weighed_links.items %}
+                <script type="text/javascript">
+                    function createSVGElement( eltType, properties) {
+                        var tgt = document.getElementById("svgweb");
+                        var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
+                        for ( prop in properties ) {
+                            elt.setAttribute(prop, properties[prop]);
+                            }
+                        tgt.appendChild(elt);
+                        }
+                    var lineProperties = {'style': 'stroke:rgb(255,0,0)'};
+                    lineProperties.x1 = 500 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 20;
+                    lineProperties.x2 = 500;
+                    lineProperties.y1 = 500 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 20;
+                    lineProperties.y2 = 500;
+                    lineProperties.id = "{{page_url}}"
+                    createSVGElement('line', lineProperties);
+                </script>
+                {% endfor %}
+                <svg:circle r="7.25" style="fill: #1f77b4; stroke: #15537d;"
+                    cx="500" cy="500" />
+            </svg:svg>
+        </div>
+    </body>
+</html>
