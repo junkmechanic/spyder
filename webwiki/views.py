@@ -29,14 +29,15 @@ def send_response(request):
     root_links = copy.deepcopy(root_node.weighed_links)
     largest = 0
     for key in root_links.keys():
-        if root_links[key] > 30:
-            root_links[key] = 30
+        if root_links[key] > 32:
+            root_links[key] = 32
         if root_links[key] > largest:
             largest = root_links[key]
     largest = largest + 4
     for key in root_links.keys():
         root_links[key] = largest - root_links[key]
-        root_links[key] = math.exp(math.log10(root_links[key]))
+        #root_links[key] = math.exp(500 * (root_links[key]))
+        root_links[key] = (0.5 * root_links[key]) + 3
     t = loader.get_template(template_name)
     c = RequestContext(request, {'root': root_links, 'num': num_of_nodes,
                                  'root_url': root_node.name})

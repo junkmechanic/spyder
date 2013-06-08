@@ -37,14 +37,14 @@ def compare_pages(root_page, page):
         for word in page.word_dict.keys():
             if word == rword:
                 print(word)
-                similarity += (1 - similarity) * (page.word_dict[word] *
+                similarity += (1 - similarity) * (root_page.word_dict[rword] *
                                                   page.word_dict[word])
     print('{} <- {} -> {}'.format(root_page.url, str(similarity), page.url))
     if similarity > 0:
         lock.acquire()
-        root_page.weighed_links[page.url] = math.exp(similarity * 30)
+        root_page.weighed_links[page.url] = math.exp(similarity * 20)
         lock.release()
-        page.weighed_links[root_page.url] = math.exp(similarity * 30)
+        page.weighed_links[root_page.url] = math.exp(similarity * 20)
 
 
 class Worker(threading.Thread):
