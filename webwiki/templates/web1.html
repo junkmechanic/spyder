@@ -2,10 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:svg="http://www.w3.org/2000/svg">
     <head>
+        <script type="text/javascript">
+            function display(a){
+                document.getElementById("Description").innerHTML = a;
+            }
+            function createSVGElement( eltType, properties) {
+                var tgt = document.getElementById("svgweb");
+                var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
+                for ( prop in properties ) {
+                    elt.setAttribute(prop, properties[prop]);
+                    }
+                tgt.appendChild(elt);
+                }
+        </script>
     </head>
     <body>
         <p>
-        Demo!!
+            <script type="text/javascript">
+                function callSearch(){
+                    var query = document.getElementById("search_query").value
+                    window.open("/spinweb/" + query, '_self')
+                }
+            </script>
+            <div align="center">
+                <h1>WebWiki</h1>
+                <br />
+                <input type="text" id="search_query" style="width:300px;" />
+                <button onclick="callSearch();" type="button">
+                    Spin Web
+                </button>
+            </div>
         </p>
         <p>
             <a href="/refresh">
@@ -16,14 +42,6 @@
             <svg:svg id="svgweb" width="900" height="500">
                 {% for page_url, len in root.items %}
                 <script type="text/javascript">
-                    function createSVGElement( eltType, properties) {
-                        var tgt = document.getElementById("svgweb");
-                        var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
-                        for ( prop in properties ) {
-                            elt.setAttribute(prop, properties[prop]);
-                            }
-                        tgt.appendChild(elt);
-                        }
                     var lineProperties = {'style': 'stroke:rgb(200,200,150)'};
                     lineProperties.x1 = 450 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
                     lineProperties.x2 = 450;
@@ -35,21 +53,10 @@
                 {% endfor %}
                 {% for page_url, len in root.items %}
                 <script type="text/javascript">
-                    function display(a){
-                        document.getElementById("Description").innerHTML = a;
-                    }
-                    function createSVGElement( eltType, properties) {
-                        var tgt = document.getElementById("svgweb");
-                        var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
-                        for ( prop in properties ) {
-                            elt.setAttribute(prop, properties[prop]);
-                            }
-                        tgt.appendChild(elt);
-                        }
                     var circleProperties = {'style': 'fill: #1f77b4; stroke: #15537d;'};
                     circleProperties.cx = 450 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
                     circleProperties.cy = 250 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
-                    circleProperties.id = "{{page_url}}";
+                    circleProperties.id = "{{page_url.0}}";
                     circleProperties.r = "15.0";
                     circleProperties.onclick = 'display("'+circleProperties.id+'");';
                     createSVGElement('circle', circleProperties);

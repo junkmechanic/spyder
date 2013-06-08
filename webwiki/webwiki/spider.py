@@ -36,15 +36,15 @@ def compare_pages(root_page, page):
     for rword in root_page.word_dict.keys():
         for word in page.word_dict.keys():
             if word == rword:
-                print(word)
+                #print(word)
                 similarity += (1 - similarity) * (root_page.word_dict[rword] *
                                                   page.word_dict[word])
     print('{} <- {} -> {}'.format(root_page.url, str(similarity), page.url))
     if similarity > 0:
         lock.acquire()
-        root_page.weighed_links[page.url] = math.exp(similarity * 20)
+        root_page.weighed_links[(page.name, page.url)] = math.exp(similarity * 20)
         lock.release()
-        page.weighed_links[root_page.url] = math.exp(similarity * 20)
+        page.weighed_links[(root_page.name, root_page.url)] = math.exp(similarity * 20)
 
 
 class Worker(threading.Thread):
@@ -61,7 +61,8 @@ class Worker(threading.Thread):
             self.display_que.put((page, self.parent_id, None), block=True,
                                  timeout=2)
         except:
-            print("Error in inserting {} in queue".format(self.url))
+            #print("Error in inserting {} in queue".format(self.url))
+            pass
 
 
 class RootProcessor(threading.Thread):
@@ -85,7 +86,7 @@ class RootProcessor(threading.Thread):
     def run(self):
         root_page = WikiPage(spin_yarn(base_url + self.url), self.url)
         try:
-            print("Inserting {} ...".format(self.url))
+            #print("Inserting {} ...".format(self.url))
             self.display_que.put((root_page, self.parent_id, self.id),
                                  block=True, timeout=2)
         except:
@@ -94,15 +95,15 @@ class RootProcessor(threading.Thread):
             added = False
             while not added:
                 if len(self.workers) < self.max_threads:
-                    print("RootProcessor spawning new worker")
+                    #print("RootProcessor spawning new worker")
                     new_worker = Worker(root_page.links[i], self.display_que,
                                         self.id)
                     self.workers.append(new_worker)
                     new_worker.start()
                     added = True
                 else:
-                    print("Cant insert presently!!")
-                    print(self.workers)
+                    #print("Cant insert presently!!")
+                    #print(self.workers)
                     time.sleep(1)
                     self.clear_workers()
 
@@ -146,13 +147,20 @@ class Displayer(threading.Thread):
                     print(root_page.weighed_links)
                 self.queue.task_done()
             except:
-                print("Queue is empty now")
+                #print("Queue is empty now")
                 break
 
 
-def weave():
+def weave(query_url=None):
+    if not query_url:
+        query_url = url_d
+    # root_nodes has to be cleared before each run either from this point or
+    # from the caller of this function if root_nodes is accessable to it.
+    root_nodes.clear()
+    global ROOT_IDS
+    ROOT_IDS = 0
     display_queue = Queue.Queue()
-    root = RootProcessor(url_d, display_queue, 1, 7)
+    root = RootProcessor(query_url, display_queue, 1, 7)
     root.start()
     display = Displayer(display_queue)
     time.sleep(2)

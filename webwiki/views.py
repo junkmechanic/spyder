@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader, RequestContext
-from webwiki.spider import weave, root_nodes
+from webwiki.spider import weave, root_nodes, ROOT_IDS
 import threading
 import time
 import math
@@ -12,13 +12,14 @@ lock = threading.Lock()
 
 def get_root_node():
     lock.acquire()
+    print(root_nodes)
     root_node = root_nodes[1]
     lock.release()
     return root_node
 
 
-def crawl_over():
-    working = threading.Thread(target=weave)
+def crawl_over(query_url=None):
+    working = threading.Thread(target=weave(query_url))
     working.start()
 
 
@@ -51,4 +52,10 @@ def buildweb(request):
 
 
 def refresh_page(request):
+    return send_response(request)
+
+
+def spin_new_web(request, query_url):
+    crawl_over(query_url)
+    time.sleep(8)
     return send_response(request)

@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', webwiki.views.buildweb, name='home'),
     url(r'^refresh$', webwiki.views.refresh_page, name='refresh'),
+    url(r'^spinweb/(.+)$', webwiki.views.spin_new_web, name='spin'),
 )

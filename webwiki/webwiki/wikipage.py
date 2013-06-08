@@ -4,7 +4,7 @@ from stopwords import stopwords
 
 class WikiPage:
 
-    LEAVE_OUT = "(#cite_note)|(Help:)|(Wikipedia:)|(Category:)"
+    LEAVE_OUT = "(#cite_note)|(Help:)|(Wikipedia:)|(Category:)|(File:)"
     WEED_OUT = "(.+)(,|\.|'s)"
 
     def __init__(self, spun, url):
