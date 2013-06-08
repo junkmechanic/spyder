@@ -13,8 +13,8 @@
             </a>
         </p>
         <div id="web">
-            <svg:svg id="svgweb" width="1000" height="750">
-                {% for page_url, len in root.weighed_links.items %}
+            <svg:svg id="svgweb" width="750" height="500">
+                {% for page_url, len in root.items %}
                 <script type="text/javascript">
                     function createSVGElement( eltType, properties) {
                         var tgt = document.getElementById("svgweb");
@@ -25,17 +25,43 @@
                         tgt.appendChild(elt);
                         }
                     var lineProperties = {'style': 'stroke:rgb(255,0,0)'};
-                    lineProperties.x1 = 500 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 20;
-                    lineProperties.x2 = 500;
-                    lineProperties.y1 = 500 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 20;
-                    lineProperties.y2 = 500;
-                    lineProperties.id = "{{page_url}}"
+                    lineProperties.x1 = 250 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 50;
+                    lineProperties.x2 = 250;
+                    lineProperties.y1 = 250 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 50;
+                    lineProperties.y2 = 250;
+                    lineProperties.id = "{{page_url}}";
                     createSVGElement('line', lineProperties);
                 </script>
                 {% endfor %}
-                <svg:circle r="7.25" style="fill: #1f77b4; stroke: #15537d;"
-                    cx="500" cy="500" />
+                {% for page_url, len in root.items %}
+                <script type="text/javascript">
+                    function display(a){
+                        document.getElementById("Description").innerHTML = a;
+                    }
+                    function createSVGElement( eltType, properties) {
+                        var tgt = document.getElementById("svgweb");
+                        var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
+                        for ( prop in properties ) {
+                            elt.setAttribute(prop, properties[prop]);
+                            }
+                        tgt.appendChild(elt);
+                        }
+                    var circleProperties = {'style': 'fill: #1f77b4; stroke: #15537d;'};
+                    circleProperties.cx = 250 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 50;
+                    circleProperties.cy = 250 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 50;
+                    circleProperties.id = "{{page_url}}";
+                    circleProperties.r = "15.0";
+                    circleProperties.onclick = 'display("'+circleProperties.id+'");';
+                    createSVGElement('circle', circleProperties);
+                </script>
+                {% endfor %}
+                <svg:circle r="20.0" style="fill: #1f77b4; stroke: #15537d;"
+                     cx="250" cy="250" id="{{root_url}}" onclick="display(id)" />
             </svg:svg>
+        </div>
+        <h3>Description</h3>
+        <p></p>
+        <div id="Description">
         </div>
     </body>
 </html>
