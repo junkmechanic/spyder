@@ -1,29 +1,36 @@
 <?xml version="1.0"?>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:svg="http://www.w3.org/2000/svg">
+      {% load staticfiles %}
+
+      <link rel="stylesheet" type="text/css" href="{% static 'webwiki/style.css' %}" />
     <head>
         <script type="text/javascript">
-            function display(a){
-                document.getElementById("Description").innerHTML = a;
-            }
-            function createSVGElement( eltType, properties) {
-                var tgt = document.getElementById("svgweb");
+            function createSVGElement(eltType, properties, parent_tag) {
+                var tgt = document.getElementById(parent_tag);
                 var elt = document.createElementNS('http://www.w3.org/2000/svg', eltType);
                 for ( prop in properties ) {
                     elt.setAttribute(prop, properties[prop]);
                     }
                 tgt.appendChild(elt);
-                }
+            }
+            function callSearch(){
+                var query = document.getElementById("search_query").value
+                window.open("/spinweb/" + query, '_self')
+            }
+            function display(a, b){
+                document.getElementById("Description").innerHTML = a;
+                b = (typeof b === "undefined") ? "self-titled" : b;
+                document.getElementById("Description").title = b;
+            }
+            function bouncecallSearch(){
+                var query = document.getElementById("Description").title
+                window.open("/spinweb/" + query, '_self')
+            }
         </script>
     </head>
     <body>
         <p>
-            <script type="text/javascript">
-                function callSearch(){
-                    var query = document.getElementById("search_query").value
-                    window.open("/spinweb/" + query, '_self')
-                }
-            </script>
             <div align="center">
                 <h1>WebWiki</h1>
                 <br />
@@ -38,37 +45,45 @@
                 <input type="button" value="Refresh" />
             </a>
         </p>
-        <div id="web">
-            <svg:svg id="svgweb" width="900" height="500">
+        <div id="web" style="float:left;">
+            <svg:svg id="svgweb" width="1000" height="700">
+                <svg:rect width="1000" height="700"
+                  style="fill:rgb(0,0,0);stroke-width:-1;stroke:rgb(0,0,0)"/>
                 {% for page_url, len in root.items %}
                 <script type="text/javascript">
                     var lineProperties = {'style': 'stroke:rgb(200,200,150)'};
                     lineProperties.x1 = 450 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
                     lineProperties.x2 = 450;
-                    lineProperties.y1 = 250 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
-                    lineProperties.y2 = 250;
+                    lineProperties.y1 = 350 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
+                    lineProperties.y2 = 350;
                     lineProperties.id = "{{page_url}}";
-                    createSVGElement('line', lineProperties);
+                    createSVGElement('line', lineProperties, "svgweb");
                 </script>
                 {% endfor %}
                 {% for page_url, len in root.items %}
                 <script type="text/javascript">
                     var circleProperties = {'style': 'fill: #1f77b4; stroke: #15537d;'};
                     circleProperties.cx = 450 + Math.cos(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
-                    circleProperties.cy = 250 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
+                    circleProperties.cy = 350 + Math.sin(2*Math.PI*({{forloop.counter}} -1)/{{num}}) * {{len}} * 15;
                     circleProperties.id = "{{page_url.0}}";
                     circleProperties.r = "15.0";
-                    circleProperties.onclick = 'display("'+circleProperties.id+'");';
-                    createSVGElement('circle', circleProperties);
+                    circleProperties.onclick = 'display("'+circleProperties.id+'", "{{page_url.1}}");';
+                    createSVGElement('circle', circleProperties, "svgweb");
                 </script>
                 {% endfor %}
                 <svg:circle r="20.0" style="fill: #1f77b4; stroke: #15537d;"
-                     cx="450" cy="250" id="{{root_url}}" onclick="display(id)" />
+                     cx="450" cy="350" id="{{root_url}}" onclick="display(id)" />
             </svg:svg>
         </div>
-        <h3>Description</h3>
-        <p></p>
-        <div id="Description">
+        <div style="margin-left=50px">
+            <h3>Description</h3>
+            <div id="Description">
+            </div>
+            <p>
+                <button onclick="bouncecallSearch();" type="button">
+                    Spin Web for this
+                </button>
+            </p>
         </div>
     </body>
 </html>

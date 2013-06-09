@@ -15,7 +15,8 @@ req_headers = {
                   'Gecko/20100101 Firefox/21.0'
 }
 
-url_d = '/wiki/Batman'
+url_d = '/wiki/Web_crawler'
+#url_d = '/wiki/Batman'
 base_url = 'http://en.wikipedia.org'
 
 ROOT_IDS = 0
@@ -39,12 +40,14 @@ def compare_pages(root_page, page):
                 #print(word)
                 similarity += (1 - similarity) * (root_page.word_dict[rword] *
                                                   page.word_dict[word])
-    print('{} <- {} -> {}'.format(root_page.url, str(similarity), page.url))
+    #print('{} <- {} -> {}'.format(root_page.url, str(similarity), page.url))
     if similarity > 0:
         lock.acquire()
-        root_page.weighed_links[(page.name, page.url)] = math.exp(similarity * 20)
+        root_page.weighed_links[(page.name, page.url)] = math.exp(similarity *
+                                                                  20)
         lock.release()
-        page.weighed_links[(root_page.name, root_page.url)] = math.exp(similarity * 20)
+        page.weighed_links[(root_page.name, root_page.url)] = math.exp(
+            similarity * 20)
 
 
 class Worker(threading.Thread):
@@ -61,7 +64,7 @@ class Worker(threading.Thread):
             self.display_que.put((page, self.parent_id, None), block=True,
                                  timeout=2)
         except:
-            #print("Error in inserting {} in queue".format(self.url))
+            print("Error in inserting {} in queue".format(self.url))
             pass
 
 
@@ -91,7 +94,7 @@ class RootProcessor(threading.Thread):
                                  block=True, timeout=2)
         except:
             print("Error in inserting {} in queue".format(self.url))
-        for i in range(25):
+        for i in range(30):
             added = False
             while not added:
                 if len(self.workers) < self.max_threads:

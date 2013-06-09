@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.template import loader, RequestContext
-from webwiki.spider import weave, root_nodes, ROOT_IDS
+from webwiki.spider import weave, root_nodes
 import threading
 import time
-import math
+#import math
 import copy
 
 
@@ -32,6 +32,8 @@ def send_response(request):
     for key in root_links.keys():
         if root_links[key] > 32:
             root_links[key] = 32
+        if root_links[key] < 2.5:
+            root_links[key] = 2.5
         if root_links[key] > largest:
             largest = root_links[key]
     largest = largest + 4
