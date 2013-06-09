@@ -68,11 +68,16 @@
                     circleProperties.id = "{{page_url.0}}";
                     circleProperties.r = "15.0";
                     circleProperties.onclick = 'display("'+circleProperties.id+'", "{{page_url.1}}");';
+                    circleProperties.onmouseover="evt.target.setAttribute('style', 'fill:#99FFCC;');";
+                    circleProperties.onmouseout="evt.target.setAttribute('style','fill:#1f77b4;');";
                     createSVGElement('circle', circleProperties, "svgweb");
                 </script>
                 {% endfor %}
                 <svg:circle r="20.0" style="fill: #1f77b4; stroke: #15537d;"
-                     cx="450" cy="350" id="{{root_url}}" onclick="display(id)" />
+                cx="450" cy="350" id="{{root_url}}" onclick="display(id)"
+                onmouseover="evt.target.setAttribute('opacity', '0.5');"
+                onmouseout="evt.target.setAttribute('opacity','1)');"
+                />
             </svg:svg>
         </div>
         <div style="margin-left=50px">
