@@ -15,9 +15,9 @@ req_headers = {
                   'Gecko/20100101 Firefox/21.0'
 }
 
-url_d = '/wiki/Web_crawler'
+url_d = 'wiki/Web_crawler'
 #url_d = '/wiki/Batman'
-base_url = 'http://en.wikipedia.org'
+base_url = 'http://en.wikipedia.org/'
 
 ROOT_IDS = 0
 
@@ -94,7 +94,8 @@ class RootProcessor(threading.Thread):
                                  block=True, timeout=2)
         except:
             print("Error in inserting {} in queue".format(self.url))
-        for i in range(30):
+        list_len = 30 if len(root_page.links) > 30 else len(root_page.links)
+        for i in range(list_len):
             added = False
             while not added:
                 if len(self.workers) < self.max_threads:

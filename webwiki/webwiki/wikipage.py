@@ -31,7 +31,7 @@ class WikiPage:
                         (href != self.url)
                 ):
                     #self.weighed_links[href] = 0
-                    self.links.append(href)
+                    self.links.append(href[1:])
             word_list = para.text.split()
             for word in word_list:
                 regex = re.compile(WikiPage.WEED_OUT)
