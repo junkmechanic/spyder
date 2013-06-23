@@ -19,5 +19,5 @@ urlpatterns = patterns('',
     url(r'^$', webwiki.views.buildweb, name='home'),
     url(r'^refresh$', webwiki.views.refresh_page, name='refresh'),
     url(r'^spinweb/(.+)$', webwiki.views.spin_new_web, name='spin'),
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/webwiki/static/webwiki/images/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/webwiki/images/favicon.ico')),
 )
